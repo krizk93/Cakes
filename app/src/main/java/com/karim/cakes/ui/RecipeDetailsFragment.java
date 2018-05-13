@@ -30,13 +30,13 @@ public class RecipeDetailsFragment extends Fragment implements StepsAdapter.Step
     }
 
     @Override
-    public void onItemClick(Step step) {
-        mCallback.onStepSelected(step);
+    public void onItemClick(int index) {
+        mCallback.onStepSelected(index);
     }
 
     public interface onRecipeClickListener {
         Recipe onRecipeSelected();
-        void onStepSelected(Step step);
+        void onStepSelected(int index);
     }
 
     @Override

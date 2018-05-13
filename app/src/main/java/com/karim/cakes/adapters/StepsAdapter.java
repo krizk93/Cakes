@@ -19,7 +19,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
     private final StepsOnClickListener mOnClickListener;
 
     public interface StepsOnClickListener{
-        void onItemClick(Step step);
+        void onItemClick(int index);
     }
 
     public StepsAdapter(Context context, List<Step> dataset, StepsOnClickListener listener){
@@ -62,8 +62,8 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
 
         @Override
         public void onClick(View view) {
-            int clickedPosition = getAdapterPosition();
-            mOnClickListener.onItemClick(mDataset.get(clickedPosition));
+            //int clickedPosition = getAdapterPosition();
+            mOnClickListener.onItemClick(getAdapterPosition());
         }
     }
 }

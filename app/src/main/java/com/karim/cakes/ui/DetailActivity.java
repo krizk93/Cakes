@@ -28,7 +28,8 @@ public class DetailActivity extends AppCompatActivity implements RecipeDetailsFr
             if (savedInstanceState == null) {
                 instructionText = recipe.getSteps().get(0).getDescription();
                 CookingStepFragment cookingStepFragment = new CookingStepFragment();
-                cookingStepFragment.setInstructionText(instructionText);
+                cookingStepFragment.setSteps(recipe.getSteps());
+                cookingStepFragment.setIndex(0);
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction()
                         .add(R.id.fragment_container, cookingStepFragment)
@@ -52,12 +53,14 @@ public class DetailActivity extends AppCompatActivity implements RecipeDetailsFr
     }
 
     @Override
-    public void onStepSelected(Step step) {
+    public void onStepSelected(int index) {
         //String url = step.getVideoURL();
         //Toast.makeText(this,url,Toast.LENGTH_SHORT).show();
+        //Step step = recipe.getSteps().get(index);
         if (mTwoPane) {
             CookingStepFragment cookingStepFragment = new CookingStepFragment();
-            cookingStepFragment.setInstructionText(step.getDescription());
+            cookingStepFragment.setSteps(recipe.getSteps());
+            cookingStepFragment.setIndex(index);
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, cookingStepFragment)
@@ -65,10 +68,12 @@ public class DetailActivity extends AppCompatActivity implements RecipeDetailsFr
 
         } else {
             Intent intent = new Intent(DetailActivity.this, StepDetailActivity.class);
-            intent.putExtra(getString(R.string.step_details), step);
+            intent.putExtra(getString(R.string.recipe_details), recipe);
+            intent.putExtra(getString(R.string.step_details), index);
             startActivity(intent);
         }
     }
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {

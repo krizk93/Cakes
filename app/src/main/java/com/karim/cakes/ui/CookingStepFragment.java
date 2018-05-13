@@ -9,9 +9,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.karim.cakes.R;
+import com.karim.cakes.model.Step;
+
+import java.util.List;
 
 public class CookingStepFragment extends Fragment {
 
+    private List<Step> mSteps;
+    private int mIndex;
+    private Step mStep;
     private String mInstructionText = "";
     private String mUrl = "";
 
@@ -23,27 +29,30 @@ public class CookingStepFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
         if (savedInstanceState != null) {
-            mInstructionText = savedInstanceState.getString(getString(R.string.instruction_text));
-            mUrl = savedInstanceState.getString(getString(R.string.url));
+            mStep = savedInstanceState.getParcelable(getString(R.string.step_details));
+            //mUrl = savedInstanceState.getString(getString(R.string.url));
+        } else {
+            mStep = mSteps.get(mIndex);
         }
 
         View rootView = inflater.inflate(R.layout.fragment_cooking_step, container, false);
         TextView cookingStepText = rootView.findViewById(R.id.fragment_text);
+        mInstructionText = mStep.getDescription();
         cookingStepText.setText(mInstructionText);
         return rootView;
     }
 
-    public void setInstructionText(String text) {
-        mInstructionText = text;
+    public void setSteps(List<Step> steps) {
+        mSteps = steps;
     }
 
-    public void setVideoUrl(String url) {
-        mUrl = url;
+    public void setIndex(int index) {
+        mIndex = index;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putString(getString(R.string.url), mUrl);
-        outState.putString(getString(R.string.instruction_text), mInstructionText);
+        outState.putParcelable(getString(R.string.step_details), mStep);
+        //outState.putString(getString(R.string.url), mUrl);
     }
 }
