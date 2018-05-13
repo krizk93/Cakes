@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Cakes</string>
     <string name="recipe_details">Recipe Details</string>
+    <string name="step_details">Step Details</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="steps">Steps</string>
+    <string name="instruction_text">instruction text</string>
+    <string name="url">url</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.karim.cakes;
+package com.karim.cakes.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,8 +9,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.karim.cakes.R;
 import com.karim.cakes.adapters.RecipesAdapter;
 import com.karim.cakes.api.Client;
 import com.karim.cakes.api.Service;
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
             @Override
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
                 List<Recipe> recipes = response.body();
-                mAdapter = new RecipesAdapter(recipes,mContext,MainActivity.this);
+                mAdapter = new RecipesAdapter(recipes, mContext, MainActivity.this);
                 mRecyclerView.setAdapter(mAdapter);
                 //textView.setText(recipes.get(0).getName());
             }
@@ -64,8 +64,8 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
 
     @Override
     public void onItemClick(Recipe recipe) {
-        Intent intent  = new Intent(MainActivity.this,DetailActivity.class);
-        intent.putExtra(getString(R.string.recipe_details),recipe);
+        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+        intent.putExtra(getString(R.string.recipe_details), recipe);
         startActivity(intent);
         //Toast.makeText(mContext, "You chose " + recipe.getName(), Toast.LENGTH_SHORT).show();
     }

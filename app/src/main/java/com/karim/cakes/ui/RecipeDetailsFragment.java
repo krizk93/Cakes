@@ -1,4 +1,4 @@
-package com.karim.cakes;
+package com.karim.cakes.ui;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -9,7 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Toast;
 
+import com.karim.cakes.R;
 import com.karim.cakes.adapters.IngredientsAdapter;
 import com.karim.cakes.adapters.StepsAdapter;
 import com.karim.cakes.model.Ingredient;
@@ -18,7 +21,7 @@ import com.karim.cakes.model.Step;
 
 import java.util.List;
 
-public class RecipeDetailsFragment extends Fragment {
+public class RecipeDetailsFragment extends Fragment implements StepsAdapter.StepsOnClickListener {
 
     onRecipeClickListener mCallback;
 
@@ -26,8 +29,14 @@ public class RecipeDetailsFragment extends Fragment {
 
     }
 
+    @Override
+    public void onItemClick(Step step) {
+        mCallback.onStepSelected(step);
+    }
+
     public interface onRecipeClickListener {
         Recipe onRecipeSelected();
+        void onStepSelected(Step step);
     }
 
     @Override
@@ -53,7 +62,14 @@ public class RecipeDetailsFragment extends Fragment {
 
         RecyclerView stepsRecyclerView = RootView.findViewById(R.id.steps_recycler_view);
         List<Step> steps = mCallback.onRecipeSelected().getSteps();
-        StepsAdapter stepsAdapter = new StepsAdapter(getActivity(),steps);
+        StepsAdapter stepsAdapter = new StepsAdapter(getActivity(),steps,this);
+        /*stepsRecyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(getActivity(),"You clicked " + i, Toast.LENGTH_SHORT).show();
+            }
+        });*/
+
         RecyclerView.LayoutManager stepsLayoutManager = new LinearLayoutManager(getActivity());
         stepsRecyclerView.setAdapter(stepsAdapter);
         stepsRecyclerView.setLayoutManager(stepsLayoutManager);
