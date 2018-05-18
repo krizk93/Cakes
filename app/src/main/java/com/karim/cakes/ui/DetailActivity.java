@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.karim.cakes.R;
 import com.karim.cakes.model.Recipe;
@@ -17,8 +16,6 @@ public class DetailActivity extends AppCompatActivity implements RecipeDetailsFr
     Recipe recipe;
     boolean mTwoPane;
     List<Step> steps;
-    //String url = "";
-    //String instructionText = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +51,6 @@ public class DetailActivity extends AppCompatActivity implements RecipeDetailsFr
 
     @Override
     public void onStepSelected(int index) {
-        //String url = step.getVideoURL();
-        //Toast.makeText(this,url,Toast.LENGTH_SHORT).show();
-        //Step step = recipe.getSteps().get(index);
         if (mTwoPane) {
             CookingStepFragment cookingStepFragment = new CookingStepFragment();
             cookingStepFragment.setRecipe(recipe);
