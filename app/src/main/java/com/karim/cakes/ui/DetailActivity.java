@@ -10,12 +10,15 @@ import com.karim.cakes.R;
 import com.karim.cakes.model.Recipe;
 import com.karim.cakes.model.Step;
 
+import java.util.List;
+
 public class DetailActivity extends AppCompatActivity implements RecipeDetailsFragment.onRecipeClickListener {
 
     Recipe recipe;
     boolean mTwoPane;
-    String url = "";
-    String instructionText = "";
+    List<Step> steps;
+    //String url = "";
+    //String instructionText = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,21 +26,18 @@ public class DetailActivity extends AppCompatActivity implements RecipeDetailsFr
         setContentView(R.layout.activity_detail);
         Intent intent = getIntent();
         recipe = intent.getParcelableExtra(getString(R.string.recipe_details));
+        steps = recipe.getSteps();
         if (findViewById(R.id.landscape_layout) != null) {
             mTwoPane = true;
             if (savedInstanceState == null) {
-                instructionText = recipe.getSteps().get(0).getDescription();
                 CookingStepFragment cookingStepFragment = new CookingStepFragment();
-                cookingStepFragment.setSteps(recipe.getSteps());
+                cookingStepFragment.setRecipe(recipe);
                 cookingStepFragment.setIndex(0);
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction()
                         .add(R.id.fragment_container, cookingStepFragment)
                         .commit();
-            } else {
-                instructionText = savedInstanceState.getString(getString(R.string.instruction_text));
             }
-
 
         } else mTwoPane = false;
     }
@@ -59,7 +59,7 @@ public class DetailActivity extends AppCompatActivity implements RecipeDetailsFr
         //Step step = recipe.getSteps().get(index);
         if (mTwoPane) {
             CookingStepFragment cookingStepFragment = new CookingStepFragment();
-            cookingStepFragment.setSteps(recipe.getSteps());
+            cookingStepFragment.setRecipe(recipe);
             cookingStepFragment.setIndex(index);
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
@@ -74,11 +74,4 @@ public class DetailActivity extends AppCompatActivity implements RecipeDetailsFr
         }
     }
 
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(getString(R.string.instruction_text), instructionText);
-        outState.putString(getString(R.string.url), url);
-    }
 }

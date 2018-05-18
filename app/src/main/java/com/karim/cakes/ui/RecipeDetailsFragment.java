@@ -36,6 +36,7 @@ public class RecipeDetailsFragment extends Fragment implements StepsAdapter.Step
 
     public interface onRecipeClickListener {
         Recipe onRecipeSelected();
+
         void onStepSelected(int index);
     }
 
@@ -62,13 +63,7 @@ public class RecipeDetailsFragment extends Fragment implements StepsAdapter.Step
 
         RecyclerView stepsRecyclerView = RootView.findViewById(R.id.steps_recycler_view);
         List<Step> steps = mCallback.onRecipeSelected().getSteps();
-        StepsAdapter stepsAdapter = new StepsAdapter(getActivity(),steps,this);
-        /*stepsRecyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getActivity(),"You clicked " + i, Toast.LENGTH_SHORT).show();
-            }
-        });*/
+        StepsAdapter stepsAdapter = new StepsAdapter(getActivity(), steps, this);
 
         RecyclerView.LayoutManager stepsLayoutManager = new LinearLayoutManager(getActivity());
         stepsRecyclerView.setAdapter(stepsAdapter);

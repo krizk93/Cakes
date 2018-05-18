@@ -31,16 +31,17 @@ public class StepDetailActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(recipe.getName());
         //url = step.getVideoURL();
 
-        CookingStepFragment cookingStepFragment = new CookingStepFragment();
-        cookingStepFragment.setSteps(steps);
-        cookingStepFragment.setIndex(mIndex);
+        if (savedInstanceState == null) {
+            CookingStepFragment cookingStepFragment = new CookingStepFragment();
+            cookingStepFragment.setRecipe(recipe);
+            cookingStepFragment.setIndex(mIndex);
 
-        final FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .add(R.id.fragment_container, cookingStepFragment)
-                .commit();
-
-        Button nextButton = findViewById(R.id.next_button);
+            final FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .add(R.id.fragment_container, cookingStepFragment)
+                    .commit();
+        }
+/*        Button nextButton = findViewById(R.id.next_button);
         Button previousButton = findViewById(R.id.previous_button);
 
         nextButton.setOnClickListener(new View.OnClickListener() {
@@ -49,8 +50,9 @@ public class StepDetailActivity extends AppCompatActivity {
                 if (mIndex < steps.size() - 1) {
                     mIndex++;
                     CookingStepFragment newCookingStepFragment = new CookingStepFragment();
-                    newCookingStepFragment.setSteps(steps);
-                    newCookingStepFragment.setIndex(mIndex);
+                    newCookingStepFragment.setStep(steps.get(mIndex));
+                    //newCookingStepFragment.setSteps(steps);
+                    //newCookingStepFragment.setIndex(mIndex);
                     fragmentManager.beginTransaction()
                             .replace(R.id.fragment_container, newCookingStepFragment)
                             .commit();
@@ -64,14 +66,22 @@ public class StepDetailActivity extends AppCompatActivity {
                 if (mIndex >= 1) {
                     mIndex--;
                     CookingStepFragment newCookingStepFragment = new CookingStepFragment();
-                    newCookingStepFragment.setSteps(steps);
-                    newCookingStepFragment.setIndex(mIndex);
+                    newCookingStepFragment.setStep(steps.get(mIndex));
+                    //newCookingStepFragment.setSteps(steps);
+                    //newCookingStepFragment.setIndex(mIndex);
                     fragmentManager.beginTransaction()
                             .replace(R.id.fragment_container, newCookingStepFragment)
                             .commit();
                 }
             }
-        });
+        });*/
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(getString(R.string.instruction_text), instructionText);
+        outState.putString(getString(R.string.url), url);
     }
 
 }

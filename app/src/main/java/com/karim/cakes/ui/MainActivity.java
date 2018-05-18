@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
         } else {
             mLayoutManager = new GridLayoutManager(mContext, 2);
         }
-        //mLayoutManager = new GridLayoutManager(this,1);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mContext = getApplicationContext();
         Service apiService = Client.getClient().create(Service.class);
@@ -52,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
                 List<Recipe> recipes = response.body();
                 mAdapter = new RecipesAdapter(recipes, mContext, MainActivity.this);
                 mRecyclerView.setAdapter(mAdapter);
-                //textView.setText(recipes.get(0).getName());
             }
 
             @Override
@@ -67,6 +65,5 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
         intent.putExtra(getString(R.string.recipe_details), recipe);
         startActivity(intent);
-        //Toast.makeText(mContext, "You chose " + recipe.getName(), Toast.LENGTH_SHORT).show();
     }
 }
