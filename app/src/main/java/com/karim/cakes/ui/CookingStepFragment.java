@@ -4,12 +4,15 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
@@ -25,6 +28,8 @@ import com.google.android.exoplayer2.util.Util;
 import com.karim.cakes.R;
 import com.karim.cakes.model.Recipe;
 import com.karim.cakes.model.Step;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -39,8 +44,11 @@ public class CookingStepFragment extends Fragment {
     private Recipe mRecipe;
     Button nextButton;
     Button previousButton;
+    TextView cookingStepText;
+    ImageView mThumbnailImage;
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mExoPlayerView;
+    long position = C.TIME_UNSET;
 
     public CookingStepFragment() {
     }
@@ -52,10 +60,12 @@ public class CookingStepFragment extends Fragment {
         if (savedInstanceState != null) {
             mRecipe = savedInstanceState.getParcelable(getString(R.string.recipe_details));
             mIndex = savedInstanceState.getInt("Index");
+            position = savedInstanceState.getLong("SELECTED_POSITION", C.TIME_UNSET);
         }
 
         View rootView = inflater.inflate(R.layout.fragment_cooking_step, container, false);
-        final TextView cookingStepText = rootView.findViewById(R.id.fragment_text);
+        cookingStepText = rootView.findViewById(R.id.fragment_text);
+        mThumbnailImage = rootView.findViewById(R.id.fragment_thumbnail);
         nextButton = rootView.findViewById(R.id.next_button);
         previousButton = rootView.findViewById(R.id.previous_button);
         mExoPlayerView = rootView.findViewById(R.id.fragment_video);
@@ -72,13 +82,7 @@ public class CookingStepFragment extends Fragment {
 
         mUrl = mStep.getVideoURL();
         mThumbnail = mStep.getThumbnailURL();
-        if (mExoPlayer == null) {
-            TrackSelector trackSelector = new DefaultTrackSelector();
-            LoadControl loadControl = new DefaultLoadControl();
-            mExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);
-            mExoPlayerView.setPlayer(mExoPlayer);
-            setVideo(mUrl, mThumbnail);
-        }
+        initializePlayer(mUrl, mThumbnail);
 
 
         nextButton.setOnClickListener(new View.OnClickListener() {
@@ -133,22 +137,41 @@ public class CookingStepFragment extends Fragment {
         mIndex = index;
     }
 
+    public void initializePlayer(String url, String thumbnail) {
+        if (mExoPlayer == null) {
+            TrackSelector trackSelector = new DefaultTrackSelector();
+            LoadControl loadControl = new DefaultLoadControl();
+            mExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);
+            mExoPlayerView.setPlayer(mExoPlayer);
+            setVideo(url, thumbnail);
+        }
+    }
+
     public void setVideo(String url, String thumbnail) {
         mExoPlayer.stop();
         if (url.isEmpty()) {
+            mExoPlayerView.setVisibility(View.GONE);
             if (thumbnail.isEmpty()) {
-                mExoPlayerView.setVisibility(View.GONE);
+                mThumbnailImage.setVisibility(View.GONE);
             } else {
-                mExoPlayerView.setVisibility(View.VISIBLE);
-                String userAgent = Util.getUserAgent(getContext(), "Cakes");
-                MediaSource mediaSource = new ExtractorMediaSource(Uri.parse(thumbnail), new DefaultDataSourceFactory(getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
-                mExoPlayer.prepare(mediaSource);
-                mExoPlayer.setPlayWhenReady(true);
+                Picasso.with(getContext()).load(thumbnail).into(mThumbnailImage, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        mThumbnailImage.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        Log.e("Picasso", "cannot load image");
+                        mThumbnailImage.setVisibility(View.GONE);
+                    }
+                });
             }
         } else {
             mExoPlayerView.setVisibility(View.VISIBLE);
             String userAgent = Util.getUserAgent(getContext(), "Cakes");
             MediaSource mediaSource = new ExtractorMediaSource(Uri.parse(url), new DefaultDataSourceFactory(getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
+            if (position != C.TIME_UNSET) mExoPlayer.seekTo(position);
             mExoPlayer.prepare(mediaSource);
             mExoPlayer.setPlayWhenReady(true);
         }
@@ -159,13 +182,23 @@ public class CookingStepFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putParcelable(getString(R.string.recipe_details), mRecipe);
         outState.putInt("Index", mIndex);
+        outState.putLong("SELECTED_POSITION", position);
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mExoPlayer.stop();
-        mExoPlayer.release();
-        mExoPlayer = null;
+    public void onPause() {
+        super.onPause();
+        if (mExoPlayer != null) {
+            position = mExoPlayer.getCurrentPosition();
+            mExoPlayer.stop();
+            mExoPlayer.release();
+            mExoPlayer = null;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initializePlayer(mUrl, mThumbnail);
     }
 }
