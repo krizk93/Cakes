@@ -7,6 +7,7 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.google.gson.Gson;
+import com.karim.cakes.R;
 import com.karim.cakes.model.Ingredient;
 import com.karim.cakes.model.Recipe;
 
@@ -20,7 +21,7 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
     private List<String> mCollection = new ArrayList<>();
     private Context mContext;
 
-    public WidgetDataProvider(Context context, Intent intent) {
+    WidgetDataProvider(Context context, Intent intent) {
         mContext = context;
     }
 
@@ -73,11 +74,8 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
 
     private void initData() {
         mCollection.clear();
-        /*for (int i = 1; i <= 10; i++) {
-            mCollection.add("ListView item " + i);
-        }*/
-        SharedPreferences sharedPreferences = mContext.getSharedPreferences("RECIPE", Context.MODE_PRIVATE);
-        String json = sharedPreferences.getString("CHOSEN_RECIPE", "");
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(mContext.getString(R.string.preference_recipe), Context.MODE_PRIVATE);
+        String json = sharedPreferences.getString(mContext.getString(R.string.chosen_recipe), "");
         if (!json.isEmpty()) {
             Gson gson = new Gson();
             Recipe recipe = gson.fromJson(json, Recipe.class);

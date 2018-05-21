@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">Cakes</string>
+    <string name="loading_data" translatable="true">Loading Data</string>
+    <string name="error">Error Loading Data</string>
     <string name="recipe_details">Recipe Details</string>
+    <string name="preference_recipe">RECIPE</string>
+    <string name="chosen_recipe">CHOSEN_RECIPE</string>
     <string name="step_details">Step Details</string>
     <string name="ingredients">Ingredients</string>
     <string name="steps">Steps</string>
-    <string name="instruction_text">instruction text</string>
-    <string name="url">url</string>
     <string name="btn_previous">Previous</string>
     <string name="btn_next">Next</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
 </resources>

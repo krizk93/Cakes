@@ -19,7 +19,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
     private Context mContext;
     private final RecipeOnClickListener mOnClickListener;
 
-    public interface RecipeOnClickListener{
+    public interface RecipeOnClickListener {
         void onItemClick(Recipe recipe);
     }
 
@@ -71,7 +71,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
         TextView mRecipeName;
         TextView mServingCount;
 
-         RecipesViewHolder(View itemView) {
+        RecipesViewHolder(View itemView) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.recipe_image);
             mRecipeName = itemView.findViewById(R.id.tv_recipe_name);

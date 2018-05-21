@@ -23,24 +23,19 @@ import com.karim.cakes.ui.MainActivity;
 public class CakesWidget extends AppWidgetProvider {
 
     public static final String WIDGET_IDS_KEY = "mywidgetproviderwidgetids";
-    private static Recipe recipe;
+
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.cakes_widget);
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences("RECIPE", Context.MODE_PRIVATE);
-        String json = sharedPreferences.getString("CHOSEN_RECIPE", "");
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_recipe), Context.MODE_PRIVATE);
+        String json = sharedPreferences.getString(context.getString(R.string.chosen_recipe), "");
         if (!json.isEmpty()) {
             Gson gson = new Gson();
-            recipe = gson.fromJson(json, Recipe.class);
+            Recipe recipe = gson.fromJson(json, Recipe.class);
             views.setTextViewText(R.id.widget_recipe_title, recipe.getName());
-
-/*            Intent intent = new Intent(context, DetailActivity.class);
-            intent.putExtra(context.getString(R.string.recipe_details), recipe);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-            views.setOnClickPendingIntent(R.id.widget_recipe_title, pendingIntent);*/
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -67,7 +62,7 @@ public class CakesWidget extends AppWidgetProvider {
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
-        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds,R.id.widget_list);
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list);
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
